@@ -2,9 +2,7 @@
 <html>
 <head>
   <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
-  <script src="./Slider.js"></script>
   <script src="./Phone.js"></script>
-  <script src = "./Horizontal_Slider.js"></script>
   <script src = "./Battery.js"></script>
   <script src = "./CurrentGenerator.js"></script>
   <script src = "./BrightnessSlider.js"></script>
@@ -23,9 +21,8 @@
     <div class = "button"><div style = "margin:auto;color:white;font-size:1.25em">A Simulation of our Fuzzy System</div></div>
     <script>
         
-        const slider = new Slider(30,200)    
+   
         const phone = new Phone(400, 170)
-        const hSlider = new HorizontalSlider(360,625)
         const battery = new Battery(130,320)
         const currentGen = new CurrentGenerator(550,590 , 100)
         const brightnessSlider = new BrightnessSlider(100,50 , 500)
@@ -42,7 +39,6 @@
             
         }
         function draw(){
-            //background(brightnessSlider.getOutput(), brightnessSlider.getOutput(), 20)
            background(0)
             phone.draw()
             currentGen.draw()
@@ -55,22 +51,8 @@
             noStroke()
             rect(505,570,30,50)
 
-            // power slider
-            //hSlider.draw()
             battery.draw()
-/*
-            // variable output
-            fill(255)
-            rect(0,520,300,180)
-            textSize(20)
-            fill(0)
-            noStroke()
-
-            
-            text("Battery Life : "+ (battery.getBatteryPercent()*100).toFixed(2) + "%",30,590);
-            text("Ambient (Lux) : "+ brightnessSlider.getLux(),30,620);
-            text("Charge (Amps) : "+ currentGen.getCurrent(),30,650);
-            */
+            //draw sun and write amperage output
             fill(0,255,255)
             text(currentGen.getCurrent()+ " A",600,650);
             sun.setColor([brightnessSlider.getOutput()+50, brightnessSlider.getOutput()+50,0])
@@ -78,15 +60,12 @@
         }
         function mousePressed(){
             slider.clicked(mouseX, mouseY)
-           // hSlider.clicked(mouseX, mouseY)
             battery.clicked(mouseX, mouseY)
             currentGen.clicked(mouseX, mouseY)
             brightnessSlider.clicked(mouseX, mouseY)
         }
 
         function mouseReleased(){
-            //slider.release()
-           // hSlider.release()
             battery.release()
             currentGen.release()
             brightnessSlider.release()
