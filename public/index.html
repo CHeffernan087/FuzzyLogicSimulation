@@ -1,0 +1,112 @@
+<!doctype html<
+<html>
+<head>
+  <script src="https://cdn.jsdelivr.net/npm/p5@0.10.2/lib/p5.js"></script>
+  <script src="./Slider.js"></script>
+  <script src="./Phone.js"></script>
+  <script src = "./Horizontal_Slider.js"></script>
+  <script src = "./Battery.js"></script>
+  <script src = "./CurrentGenerator.js"></script>
+  <script src = "./BrightnessSlider.js"></script>
+  <script src = "./Sun.js"></script>
+  <link rel="stylesheet" type="text/css" href = "./index.css"></link>
+  <script
+  src="https://code.jquery.com/jquery-3.4.1.slim.js"
+  integrity="sha256-BTlTdQO9/fascB1drekrDVkaKd9PkwBymMlHOiG+qLI="
+  crossorigin="anonymous"></script>
+</head>
+<body>
+    
+        <div id = "canvas" style = "position:relative"></div>
+ 
+
+    <div class = "button"><div style = "margin:auto;color:white;font-size:1.25em">A Simulation of our Fuzzy System</div></div>
+    <script>
+        
+        const slider = new Slider(30,200)    
+        const phone = new Phone(400, 170)
+        const hSlider = new HorizontalSlider(360,625)
+        const battery = new Battery(130,320)
+        const currentGen = new CurrentGenerator(550,590 , 100)
+        const brightnessSlider = new BrightnessSlider(100,50 , 500)
+        const sun = new Sun(640,50,30)
+        let output = 0
+
+        setInterval(() => {
+                fetch(`http://localhost:8000/sendInputs/${currentGen.getCurrent()}/${battery.getBatteryPercent()}/${brightnessSlider.getLux()}`)
+              
+        }, 1000);
+
+        function setup(){
+            createCanvas(700,700)
+            
+        }
+        function draw(){
+            //background(brightnessSlider.getOutput(), brightnessSlider.getOutput(), 20)
+           background(0)
+            phone.draw()
+            currentGen.draw()
+            brightnessSlider.draw()
+            // charger
+            strokeWeight(10)
+            stroke(255,0,0)
+            line(520,700,520,600)
+            fill(255)
+            noStroke()
+            rect(505,570,30,50)
+
+            // power slider
+            //hSlider.draw()
+            battery.draw()
+/*
+            // variable output
+            fill(255)
+            rect(0,520,300,180)
+            textSize(20)
+            fill(0)
+            noStroke()
+
+            
+            text("Battery Life : "+ (battery.getBatteryPercent()*100).toFixed(2) + "%",30,590);
+            text("Ambient (Lux) : "+ brightnessSlider.getLux(),30,620);
+            text("Charge (Amps) : "+ currentGen.getCurrent(),30,650);
+            */
+            fill(0,255,255)
+            text(currentGen.getCurrent()+ " A",600,650);
+            sun.setColor([brightnessSlider.getOutput()+50, brightnessSlider.getOutput()+50,0])
+            sun.draw()
+        }
+        function mousePressed(){
+            slider.clicked(mouseX, mouseY)
+           // hSlider.clicked(mouseX, mouseY)
+            battery.clicked(mouseX, mouseY)
+            currentGen.clicked(mouseX, mouseY)
+            brightnessSlider.clicked(mouseX, mouseY)
+        }
+
+        function mouseReleased(){
+            //slider.release()
+           // hSlider.release()
+            battery.release()
+            currentGen.release()
+            brightnessSlider.release()
+        }
+
+        $(document).ready(() =>{
+            setInterval(() => {
+                fetch("http://localhost:8000/getOutput")
+                .then((res) => res.json())
+                .then((data) => {
+                    
+                    output = map(data["outputBrightness"], 2,625,0,255)
+                    phone.updateNits(parseFloat(data["outputBrightness"]).toFixed(1))
+                    phone.updateColor(output)
+                    
+                })
+            }, 200)
+           
+        })
+        
+    </script>
+</body>
+</html>
