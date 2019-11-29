@@ -1,6 +1,6 @@
 
 i = 3000;
-
+Fuzzify = readfis("fisFile.fis");
 while(i > 0)
     params = webread("http://localhost:8000/getInputs");
    
